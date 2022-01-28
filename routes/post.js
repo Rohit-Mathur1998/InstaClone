@@ -7,6 +7,7 @@ const Post = mongoose.model("Post");
 router.get("/allpost", (req, res) => {
   Post.find()
     .populate("postedBy", "_id name")
+    .sort('-createdAt')
     .then((posts) => {
       res.json({ posts });
     })
@@ -20,6 +21,7 @@ router.get("/getsubpost", requireLogin, (req, res) => {
   Post.find({ postedBy: { $in: req.user.following } })
     .populate("postedBy", "_id name")
     .populate("comments.postedBy", "_id name")
+    .sort('-createdAt')
     .sort("-createdAt")
     .then((posts) => {
       res.json({ posts });
